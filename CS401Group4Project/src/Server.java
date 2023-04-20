@@ -41,11 +41,13 @@ public class Server {
     
     public static void save() {
         saveUsers();
+        saveMessages();
         saveMessageThreads();
     }
     
     public static void startup() {
         loadUsers();
+        loadMessages();
         loadMessageThread();        
         
     }
@@ -57,10 +59,10 @@ public class Server {
     public static void saveUsers() {
         try {
             FileWriter out = new FileWriter(new File("Users.txt"));
-            String outputString = "a";
+            String outputString = "";
             
             for(int i=0; i<usersList.size(); i++) {
-//                outputString = outputString + usersList.get(i).toString() + "\n";
+                outputString = outputString + usersList.get(i).toString() + "\n";
             }
             out.write(outputString);
             out.close();
@@ -69,6 +71,15 @@ public class Server {
             return;
         }
     }
+    
+    public static void loadMessages() {
+        
+    }
+    
+    public static void saveMessages() {
+        
+    }
+    
     public static void loadMessageThread() {
 //        loads all message threads from file and saves to messageThread arraylist
     }
