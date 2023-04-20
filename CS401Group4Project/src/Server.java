@@ -1,13 +1,18 @@
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
 public class Server {
+    static private ArrayList<User> userList = new ArrayList<User>();
+    static private ArrayList<MessageThread>  messageThreads = new ArrayList<MessageThread>();
+    static private int MAXMSGLEN = 100;
+    
     public static void main(String[] args) {
-        ArrayList<User> userList = new ArrayList<User>;
+        
         ServerSocket server = null;
         
         try {
@@ -31,14 +36,40 @@ public class Server {
             System.out.println("Error: " + e.getMessage());
         }
     }
+    
+    public static void save() {
+        saveUsers();
+        saveMessageThreads();
+    }
+    
+    public static void startup() {
+        loadUsers();
+        loadMessageThread();        
+        
+    }
+    
+    public static void loadUsers() {
+//      Write function to read users from file and save to userList arraylist
+    }
+    
+    public static void saveUsers() {
+        
+    }
+    public static void loadMessageThread() {
+//        loads all message threads from file and saves to messageThread arraylist
+    }
+    public static void saveMessageThreads() {
+        
+    }
+    
 }
 
 class ClientHandler implements Runnable {
-    private Socket clientSocket;
     private final Socket clientSocket;
     private boolean loggedIn = false; // checks if client has logged in
     private boolean endConnection = false; // checks if user wants to close connection
     private Queue<Message> msgQueue; // queue for messages 
+    private User user;
     
     public ClientHandler(Socket clientSocket) {
         this.clientSocket = clientSocket;
@@ -46,25 +77,41 @@ class ClientHandler implements Runnable {
     }
     
     public void run() {
+        
+        
         try {
             
-            // Get the input and output streams for the client socket
-            BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+            // get the outputstream of client
+            OutputStream outputStream = clientSocket.getOutputStream();
             
-            // Read input from the client and send a response
-            String inputLine;
-            while ((inputLine = in.readLine()) != null) {
-                System.out.println("Received from client: " + inputLine);
-                out.println("Server response: " + inputLine);
+            // Create a ObjectOutpuitStream so we can send objects to clients
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+            
+
+            // get the input stream from the connected socket
+            InputStream inputStream = clientSocket.getInputStream();
+
+            // create a ObjectInputStream so we can read data from it.
+            ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
+
+            // runs this loop while there is a connection
+            while(!endConnection) {
+             // reads adds any incoming messages to the queue
+                Message newMsg = (Message) objectInputStream.readObject();
+                msgQueue.add(newMsg);
+                
+                
             }
-            
-            // Close the input, output, and client socket
-            in.close();
-            out.close();
+           
+         // closes the socket connection
             clientSocket.close();
+            
+            
         } catch (IOException e) {
             System.out.println("Error: " + e.getMessage());
+        } catch (ClassNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
     }
 }
