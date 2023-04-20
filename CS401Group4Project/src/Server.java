@@ -7,11 +7,13 @@ import java.util.List;
 import java.util.Queue;
 
 public class Server {
-    static private ArrayList<User> userList = new ArrayList<User>();
+    static private ArrayList<User> usersList = new ArrayList<User>();
     static private ArrayList<MessageThread>  messageThreads = new ArrayList<MessageThread>();
     static private int MAXMSGLEN = 100;
     
     public static void main(String[] args) {
+        
+        saveUsers();
         
         ServerSocket server = null;
         
@@ -49,11 +51,23 @@ public class Server {
     }
     
     public static void loadUsers() {
-//      Write function to read users from file and save to userList arraylist
+
     }
     
     public static void saveUsers() {
-        
+        try {
+            FileWriter out = new FileWriter(new File("Users.txt"));
+            String outputString = "a";
+            
+            for(int i=0; i<usersList.size(); i++) {
+//                outputString = outputString + usersList.get(i).toString() + "\n";
+            }
+            out.write(outputString);
+            out.close();
+        }
+        catch (IOException e){
+            return;
+        }
     }
     public static void loadMessageThread() {
 //        loads all message threads from file and saves to messageThread arraylist
