@@ -13,6 +13,10 @@ public class User {
     private ArrayList<MessageThread> threadList = new ArrayList<MessageThread>();
 
     // User Constructor for new user
+    public User() {
+        this.id = ++counter;
+    }
+    
     public User(UserType userType, String first, String last, String username, String password, boolean blocked, UserState userState, ArrayList<MessageThread> threadList) {
         this.id = ++counter;
         this.userType = userType;
@@ -69,6 +73,10 @@ public class User {
     
     public void setThreadList(ArrayList<MessageThread> threadList) {
         this.threadList = threadList;
+    } 
+    
+    public void setCounter(int counter) {
+        User.counter = counter;
     }
     
 //    Getters
@@ -102,6 +110,10 @@ public class User {
     
     public ArrayList<MessageThread> getThreadList() {
         return this.threadList;
+    }
+    
+    public int getCounter() {
+        return User.counter;
     }
     
 }
