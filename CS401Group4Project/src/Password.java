@@ -1,6 +1,15 @@
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+/* unit test instructions: 
+1. Create new password: Password password = new Password("myPassword123");
+2. Check if correct:
+if (password.verify("myPassword123")) {
+    // Password is correct
+} else {
+    // Password is incorrect
+} */
+
 public class Password {
     private static final String SALT = "yourSaltHere";
     private String passwordHash;
