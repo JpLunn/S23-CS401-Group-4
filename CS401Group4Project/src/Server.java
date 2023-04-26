@@ -72,12 +72,50 @@ public class Server {
         }
     }
     
-    public static void loadMessages() {
-        
+   public static void loadMessages() {
+        // Load messages from file
+        try {
+            File file = new File("Messages.txt");
+            if (!file.exists()) {
+                file.createNewFile();
+                return;
+            }
+
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+            String line = reader.readLine();
+            while (line != null) {
+                String[] splitLine = line.split(":::");
+                int threadID = Integer.parseInt(splitLine[0]);
+                String sender = splitLine[1];
+                String messageText = splitLine[2];
+                Message message = new Message(sender, messageText);
+                for (MessageThread thread : messageThreads) {
+                    if (thread.getThreadID() == threadID) {
+                        thread.addMessage(message);
+                    }
+                }
+                line = reader.readLine();
+            }
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
-    
+
     public static void saveMessages() {
-        
+        // Save messages to file
+        try {
+            FileWriter out = new FileWriter(new File("Messages.txt"), true);
+            for (MessageThread thread : messageThreads) {
+                ArrayList<Message> messages = thread.getMessages();
+                for (Message message : messages) {
+                    out.write(thread.getThreadID() + ":::" + message.getSender() + ":::" + message.getMessageText() + "\n");
+                }
+            }
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     
     public static void loadMessageThread() {
