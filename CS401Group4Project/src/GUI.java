@@ -11,7 +11,7 @@ import java.awt.event.ActionListener;
 
 
 public class GUI {
-	//this is just a test - Charles
+	
 	private User activeUser= null;
 	
 	
