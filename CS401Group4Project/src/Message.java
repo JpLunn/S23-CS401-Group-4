@@ -1,4 +1,4 @@
-import java.util.String;
+import java.util.Date;
 
 public class Message {
 	private int counter;
@@ -9,9 +9,9 @@ public class Message {
 	private Date created;
 	private Boolean editedFlag;
 	private Date dateEdited;
-	private int messageThreadID
+	private int messageThreadID;
 	
-	public Message(Message type) {
+	public Message(MessageType type) {
 		this.type = type;
 	}
 	
@@ -21,7 +21,7 @@ public class Message {
 		this.type = type;
 	}
 	
-	public Message(User owner, String content, ChatLog chat) {
+	public Message(User owner, String content, MessageThread chat) {
 		this.owner = owner;
 		this.content = content;
 	}
