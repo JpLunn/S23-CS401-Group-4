@@ -116,4 +116,12 @@ public class User {
         return User.counter;
     }
     
+    // Change username and pass functions
+    public void changeUsername(String username) {
+    	this.username = username;
+    }
+    
+    public void changePassword(String password) {
+    	this.password = password;
+    }
 }
