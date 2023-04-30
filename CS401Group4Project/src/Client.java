@@ -8,6 +8,7 @@ import java.util.Queue;
 public class Client {
     public static void main(String[] args) {
         try {
+        	GUI clientGUI;
             // Create a socket to connect to the server on port 8000
             Socket socket = new Socket("localhost", 8000);
             
@@ -22,6 +23,7 @@ public class Client {
             String response = in.readLine();
             System.out.println("Received from server: " + response);
             
+            clientGUI = new GUI();
             // Close the input, output, and socket
             in.close();
             out.close();
