@@ -12,7 +12,11 @@ public class MessageThread {
 	private static int MAXMESSAGE = 100;
 	
 	public MessageThread() {
-		
+		// Initialize list of messages
+		messageList = new ArrayList<>();
+				
+		// Initialize list of participants
+		participants = new ArrayList<>();
 	}
 	
 	public void addMessage(User givenUser, Message givenMessage) {
@@ -24,9 +28,6 @@ public class MessageThread {
 		}
 		return;
 	}
-	
-	
-	
 
 	public int getID() {
 		return ID;
