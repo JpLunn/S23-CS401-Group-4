@@ -13,7 +13,7 @@ import java.awt.event.ActionListener;
 
 import java.util.ArrayList;
 
-public class GUI {
+public class GUI implements ClientInterface{
 	
 	
 	private JFrame frame;
@@ -39,8 +39,16 @@ public class GUI {
 		createWindow();
 	}
 	
-	private void createMessage() {
+	private void createMessage(MessageType type, String content) {
+		// Create instance of the message class
+		Message currMessage = new Message(activeUser, content, type);
 		
+		// Handle different message types
+		if(type == MessageType.LOGIN) {
+			login();
+		} else if(type == MessageType.LOGOUT) {
+			logout();
+		} // etc.
 	}
 	
 	private void createMessageLoc() {
