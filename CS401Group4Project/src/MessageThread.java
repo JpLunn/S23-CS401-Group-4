@@ -7,4 +7,75 @@ public class MessageThread {
 	private ArrayList<User> participants;
 	private Date created;
 	private Date lastUpdated;
+	private Date lastServerUpdateSent;
+	private String displayName;
+	private static int MAXMESSAGE = 100;
+	
+	public MessageThread() {
+		
+	}
+
+	public int getID() {
+		return ID;
+	}
+
+	public void setID(int iD) {
+		ID = iD;
+	}
+
+	public ArrayList<Message> getMessageList() {
+		return messageList;
+	}
+
+	public void setMessageList(ArrayList<Message> messageList) {
+		this.messageList = messageList;
+	}
+
+	public ArrayList<User> getParticipants() {
+		return participants;
+	}
+
+	public void setParticipants(ArrayList<User> participants) {
+		this.participants = participants;
+	}
+
+	public Date getCreated() {
+		return created;
+	}
+
+	public void setCreated(Date created) {
+		this.created = created;
+	}
+
+	public Date getLastUpdated() {
+		return lastUpdated;
+	}
+
+	public void setLastUpdated(Date lastUpdated) {
+		this.lastUpdated = lastUpdated;
+	}
+
+	public Date getLastServerUpdateSent() {
+		return lastServerUpdateSent;
+	}
+
+	public void setLastServerUpdateSent(Date lastServerUpdateSent) {
+		this.lastServerUpdateSent = lastServerUpdateSent;
+	}
+
+	public String getDisplayName() {
+		return displayName;
+	}
+
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
+	}
+
+	public static int getMAXMESSAGE() {
+		return MAXMESSAGE;
+	}
+
+	public static void setMAXMESSAGE(int mAXMESSAGE) {
+		MAXMESSAGE = mAXMESSAGE;
+	}
 }
