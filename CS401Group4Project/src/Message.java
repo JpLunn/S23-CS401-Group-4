@@ -1,6 +1,7 @@
 import java.util.Date;
+import java.io.Serializable;
 
-public class Message {
+public class Message implements Serializable {
 	private int counter;
 	private int id;
 	private MessageType type;
@@ -9,7 +10,7 @@ public class Message {
 	private Date created;
 	private Boolean editedFlag;
 	private Date dateEdited;
-	private int messageThreadID;
+	private int messageThreadID = -1;
 	
 	public Message(MessageType type) {
 		this.type = type;
@@ -25,4 +26,31 @@ public class Message {
 		this.owner = owner;
 		this.content = content;
 	}
+
+	public MessageType getType() {
+		return this.type;
+	}
+	
+	public String getContent() {
+		return content;
+	}
+	
+	public User getOwner() { //Owner is the Sender
+		return owner;
+	}
+	
+	public Date getCreationDate() {
+		return created;
+	}
+	
+	public int getMessageThreadID() {
+		return messageThreadID;
+	}
+	
+	public void setMessageThreadID(int givenID) {
+		if(messageThreadID == -1) {
+			messageThreadID = givenID;
+		}
+	}
+	
 }
