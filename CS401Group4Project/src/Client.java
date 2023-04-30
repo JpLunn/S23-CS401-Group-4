@@ -6,6 +6,14 @@ import java.util.List;
 import java.util.Queue;
 
 public class Client {
+	private User currentUser;
+	//private ListArray<Notifications> notifications;
+	private boolean SessionActive = false;
+	private Queue messageQueue = new Queue();
+	
+	
+	
+	
     public static void main(String[] args) {
         try {
         	GUI clientGUI;
@@ -31,5 +39,30 @@ public class Client {
         } catch (IOException e) {
             System.out.println("Error: " + e.getMessage());
         }
+    }
+    
+    
+    public void setUser(User currentUser) {
+    	this.currentUser = currentUser;
+    }
+    
+    public User getCurrentUser() {
+    	return currentUser;
+    }
+    
+    public void setSessionActive(boolean SessionActive) {
+    	this.SessionActive = SessionActive;
+    }
+    
+    public boolean getSessionActive() {
+    	return SessionActive;
+    }
+    
+    public void setMessageQueue(Queue MessageQueue) {
+    	this.messageQueue = MessageQueue;
+    }
+    
+    public Queue getMessageQueue() {
+    	return messageQueue;
     }
 }
