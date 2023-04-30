@@ -14,6 +14,19 @@ public class MessageThread {
 	public MessageThread() {
 		
 	}
+	
+	public void addMessage(User givenUser, Message givenMessage) {
+		if(participants.contains(givenUser)) {
+			messageList.add(givenMessage);
+		}
+		else {
+			return;
+		}
+		return;
+	}
+	
+	
+	
 
 	public int getID() {
 		return ID;
