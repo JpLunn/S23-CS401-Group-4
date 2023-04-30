@@ -90,7 +90,7 @@ public class Server {
                 String messageText = splitLine[2];
                 Message message = new Message(sender, messageText);
                 for (MessageThread thread : messageThreads) {
-                    if (thread.getThreadID() == threadID) {
+                    if (thread.getID() == threadID) {
                         thread.addMessage(message);
                     }
                 }
@@ -107,9 +107,9 @@ public class Server {
         try {
             FileWriter out = new FileWriter(new File("Messages.txt"), true);
             for (MessageThread thread : messageThreads) {
-                ArrayList<Message> messages = thread.getMessages();
+                ArrayList<Message> messages = thread.getMessageList();
                 for (Message message : messages) {
-                    out.write(thread.getThreadID() + ":::" + message.getSender() + ":::" + message.getMessageText() + "\n");
+                    out.write(thread.getID() + ":::" + message.getOwner() + ":::" + message.getContent() + "\n");
                 }
             }
             out.close();
