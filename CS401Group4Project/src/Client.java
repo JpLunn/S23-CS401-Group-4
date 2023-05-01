@@ -9,7 +9,7 @@ public class Client {
 	private User currentUser;
 	//private ListArray<Notifications> notifications;
 	private boolean SessionActive = false;
-	private Queue messageQueue = new LinkedList();
+	private Queue<Message> messageQueue = new LinkedList();
 	
 	
 	
@@ -58,11 +58,11 @@ public class Client {
     	return SessionActive;
     }
     
-    public void setMessageQueue(Queue MessageQueue) {
+    public void setMessageQueue(Queue<Message> MessageQueue) {
     	this.messageQueue = MessageQueue;
     }
     
-    public Queue getMessageQueue() {
+    public Queue<Message> getMessageQueue() {
     	return messageQueue;
     }
 }

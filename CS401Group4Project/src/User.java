@@ -124,4 +124,15 @@ public class User {
     public void changePassword(String password) {
     	this.password = password;
     }
+
+	public void setUserState(UserState userState) {
+		this.userState = userState;
+		
+	}
+	
+	public String toString() {
+    	return id + "|" + userType + "|" + firstName + "|" + lastName + "|" + username + "|" + password + "|" +
+    			blockedFlag + "|" + userState;
+    }
+	
 }

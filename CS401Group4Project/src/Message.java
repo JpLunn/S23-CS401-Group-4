@@ -24,7 +24,7 @@ public class Message implements Serializable {
 	
 	public Message(User owner, String content, int threadID) {
         this.owner = owner;
-        this.messageThreadID = threadID;
+        this.messageThreadID = Integer.valueOf(threadID);
         this.type = MessageType.NEW_TEXT;
     }
 	
