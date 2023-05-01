@@ -52,8 +52,8 @@ public class Message implements Serializable {
 		this.MsgType = MsgType;
 	}
 
-	public String getType() {
-		return this.MsgType;
+	public MessageType getType() {
+		return this.type;
 	}
 	
 	public void setContent(String content) {
