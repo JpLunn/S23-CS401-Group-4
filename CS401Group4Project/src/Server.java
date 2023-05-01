@@ -31,8 +31,8 @@ public class Server {
         		testUser2.setUserType(UserType.DEFAULT);
         		testUser2.setFirstName("Henry");
         		testUser2.setLastName("Bnafa");
-        		testUser2.setUsername("HBnafa");
-        		testUser2.setPassword("Testing2");
+        		testUser2.setUsername("test");
+        		testUser2.setPassword("test");
         		testUser2.setBlockedFlag(false);
         		testUser2.setUserState(UserState.OFFLINE);
         		testUser2.setThreadList(new ArrayList<MessageThread>());
@@ -184,18 +184,22 @@ public class Server {
     public static void sendMessageThread(Message newMessage) {
 //        System.out.println("message content 2nd stop: " + newMessage.getContent());
         MessageThread newThread = checkMessageThread(newMessage);
-//        System.out.println("Message Thread ID is: "+newThread.getID());
+        System.out.println("Message Thread ID is: "+newThread.getID());
         for(ClientHandler client : clients) {
             for(int i=0; i<newThread.getParticipants().size(); i++) {
-                if(client.user ==  newThread.getParticipants().get(i));
+                if(client.user ==  newThread.getParticipants().get(i)) {
+                    client.sendMessage(newMessage);
+                }
                 
 //                System.out.println("client: " + client);
 //                System.out.println("user1: " + client.user);
 //                System.out.println("user2: " + newThread.getParticipants().get(i));
                 // get the outputstream of client
-                    client.sendMessage(newMessage);
             }
         }
+//        if(clients.get(0).user ==  newThread.getParticipants().get(0)) {
+//            clients.get(0).sendMessage(newMessage);
+//      }
 
     }
     
@@ -233,26 +237,32 @@ class ClientHandler implements Runnable {
     private boolean endConnection = false; // checks if user wants to close connection
     private Queue<Message> msgQueue; // queue for messages 
     public User user;
+    public OutputStream outputStream;   
+    public ObjectOutputStream objectOutputStream;
     
     public ClientHandler(Socket clientSocket) {
         this.clientSocket = clientSocket;
         msgQueue = new LinkedList<Message>();
-        //user.setSocket(clientSocket);
+        
+        try {
+            //user.setSocket(clientSocket);
+        
+        this.outputStream = clientSocket.getOutputStream();
+        this.objectOutputStream = new ObjectOutputStream(outputStream);
+        
+        } catch (IOException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
     }
     
     public void sendMessage(Message newMessage) {
         try {
 //            System.out.println("message content 3rd stop: "+ newMessage.getContent());
             // get the outputstream of client
-//            System.out.println();
-            OutputStream outputStream = clientSocket.getOutputStream();
-            
-            // Create a ObjectOutpuitStream so we can send objects to clients
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
 
             // get the input stream from the connected socket
             // create a ObjectInputStream so we can read data from it.
-
+            System.out.println("Sending : " + newMessage.getContent());
 //            System.out.println(newMessage.getType()+ "-----"+newMessage.getContent()+"-----" + newMessage.getMessageThreadID());
             objectOutputStream.writeObject(newMessage);
         } catch (IOException e) {
@@ -265,13 +275,6 @@ class ClientHandler implements Runnable {
         
         
         try {
-            
-            // get the outputstream of client
-            OutputStream outputStream = clientSocket.getOutputStream();
-            
-            // Create a ObjectOutpuitStream so we can send objects to clients
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
-            
 
             // get the input stream from the connected socket
             InputStream inputStream = clientSocket.getInputStream();
@@ -327,10 +330,13 @@ class ClientHandler implements Runnable {
                             inputStream.close();
                             
                             break;
-                        case NEW_TEXT: // if text message it returns a new message with the data capitalized.
+                        case NEW_TEXT:                
 //                            System.out.println("message content 1st stop: " + msg.getContent());
 //                            System.out.println("message type 1st stop: " + msg.getContent());
                             Server.sendMessageThread(msg);
+
+                                
+//                            objectOutputStream.writeObject(msg);
                             break;
 						default:
 							break;

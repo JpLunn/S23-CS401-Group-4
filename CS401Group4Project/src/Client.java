@@ -35,22 +35,25 @@ public class Client {
                 ObjectOutputStream objectOutputStream = new ObjectOutputStream(oStream);
                 InputStream iStream = socket.getInputStream();
                 ObjectInputStream objectInputStream = new ObjectInputStream(iStream);
+                Scanner sc= new Scanner(System.in); //System.in is a standard input stream.
                 
                 
                 currentUser = new User();
-                currentUser.setPassword("Testing");
-                currentUser.setUsername("JDoe");
+                System.out.println("Enter password");
+                currentUser.setPassword(sc.nextLine());
+                System.out.println("Enter username");
+                currentUser.setUsername(sc.nextLine());
+                
                 Message loginMsg = new Message(currentUser, MessageType.LOGIN);
                 System.out.println(currentUser.getPassword());
                 System.out.println(currentUser.getUsername());
                 objectOutputStream.writeObject(loginMsg);
                 
                 while(sessionActive) {
+                    
                     if(loggedIn == false) {
+                        
                         Message inMessage = (Message) objectInputStream.readObject();
-//                        objectInputStream.reset();
-                        objectOutputStream.flush();
-                        System.out.println(inMessage.getType());
                         if(inMessage.getType().equals(MessageType.VALID_LOGIN)) {
                             loggedIn = true;
                             currentUser = inMessage.getOwner();
@@ -58,21 +61,26 @@ public class Client {
                             System.out.println("Invalid Login");
                         }
                     } 
+                    
                     if(loggedIn == true) {
                         System.out.println("Enter a message to send");
-                        Scanner sc= new Scanner(System.in); //System.in is a standard input stream.
-                        String content = sc.nextLine();
-                        System.out.println(content);
-                        Message outMessage = new Message(currentUser,content,1);
-                        System.out.println(outMessage.getContent());
+                        
+                        
+                        String userMessage = sc.nextLine();
+//                        String content = sc.nextLine();
+//                        System.out.println(userMessage);
+                        Message outMessage = new Message(currentUser,userMessage,1);
+                        
+//                        System.out.println(outMessage.getContent());
+                        
                         objectOutputStream.writeObject(outMessage);
-                        objectOutputStream.flush();
+//                        objectOutputStream.flush();
 //                        Message newMsg = new Message();
-                        objectInputStream.readObject();
-                        objectInputStream.reset();
+                        Message newMsg= (Message) objectInputStream.readObject();
+//                        objectInputStream.reset();
                         
                         
-//                        System.out.println(newMsg.getContent());
+                        System.out.println(newMsg.getContent());
 
                     }
                 }

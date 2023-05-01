@@ -54,7 +54,7 @@ public class Message implements Serializable {
 	
 
 	public Message(User owner, String content, int threadID) {
-	    System.out.println("ENTERED HERE");
+//	    System.out.println("ENTERED HERE");
 		this.owner = owner;
 		this.messageThreadID = threadID;
 		this.type = MessageType.NEW_TEXT;
