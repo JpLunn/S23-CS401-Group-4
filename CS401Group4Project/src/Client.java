@@ -107,11 +107,11 @@ public class Client {
     }
     
     public void setSessionActive(boolean SessionActive) {
-    	this.SessionActive = SessionActive;
+    	this.sessionActive = SessionActive;
     }
     
     public boolean getSessionActive() {
-    	return SessionActive;
+    	return sessionActive;
     }
     
     public void setMessageQueue(Queue<Message> MessageQueue) {
