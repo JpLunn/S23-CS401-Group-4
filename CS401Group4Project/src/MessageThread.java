@@ -1,7 +1,8 @@
 import java.util.ArrayList;
 import java.util.Date;
+import java.io.Serializable;
 
-public class MessageThread {
+public class MessageThread implements Serializable{
 	private int ID;
 	private ArrayList<Message> messageList;
 	private ArrayList<User> participants;
@@ -18,6 +19,14 @@ public class MessageThread {
 		// Initialize list of participants
 		participants = new ArrayList<>();
 	}
+	   public MessageThread(ArrayList<User> users, int ID, ArrayList<Message> messages) {
+	        // Initialize list of messages
+	       this.setID(ID);
+	        messageList = messages;
+	                
+	        // Initialize list of participants
+	        participants = users;
+	    }
 	
 	public void addMessage(User givenUser, Message givenMessage) {
 		if(participants.contains(givenUser)) {
