@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import java.util.Scanner;
 
 public class Server {
     static private ArrayList<User> usersList = new ArrayList<User>();
@@ -12,7 +13,16 @@ public class Server {
     static private int MAXMSGLEN = 100;
     
     public static void main(String[] args) {
-        
+        User testUser = new User();
+        		testUser.setUserType(UserType.ADMIN);
+        		testUser.setFirstName("John");
+        		testUser.setLastName("Doe");
+        		testUser.setUsername("JDoe");
+        		testUser.setPassword("Testing");
+        		testUser.setBlockedFlag(false);
+        		testUser.setUserState(UserState.OFFLINE);
+        		testUser.setThreadList(new ArrayList<MessageThread>());
+        usersList.add(testUser);
         saveUsers();
         
         ServerSocket server = null;
@@ -53,7 +63,17 @@ public class Server {
     }
     
     public static void loadUsers() {
-
+    	File userFile = new File("Users.txt");
+    	try {
+    		Scanner fScanner = new Scanner(userFile);
+    		while(fScanner.hasNextLine()) {
+    			String data = fScanner.nextLine();
+    			String[] dataLoad = data.split();
+    		}
+    	}catch(Exception e) {
+    		return;
+    	}
+    	
     }
     
     public static void saveUsers() {
