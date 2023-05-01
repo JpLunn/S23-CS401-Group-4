@@ -134,8 +134,8 @@ public class User implements Serializable{
 	}
 	
 	public String toString() {
-    	return id + "|" + userType + "|" + firstName + "|" + lastName + "|" + username + "|" + password + "|" +
-    			blockedFlag + "|" + userState;
+    	return id + ", " + userType + ", " + firstName + ", " + lastName + ", " + username + ", " + password + ", " +
+    			blockedFlag + ", " + userState;
     }
 	
 	public void setSocket (Socket clientSocket) {

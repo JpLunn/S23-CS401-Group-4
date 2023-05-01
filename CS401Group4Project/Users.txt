@@ -1,1 +1,2 @@
-1|ADMIN|John|Doe|JDoe|Testing|false|OFFLINE
+1, ADMIN, John, Doe, JDoe, Testing, false, OFFLINE
+3, DEFAULT, Henry, Bnafa, test, test, false, OFFLINE

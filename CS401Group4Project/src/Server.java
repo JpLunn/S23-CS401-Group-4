@@ -14,7 +14,13 @@ public class Server {
     static private int MAXMSGLEN = 100;
     
     public static void main(String[] args) {
-                User testUser = new User();
+                loadUsers();
+                
+                for(int i = 0; i < usersList.size(); i++) {
+                	System.out.println(usersList.get(i).toString());
+                }
+                
+    			User testUser = new User();
                 User testUser2 = new User();
                 User testUser3 = new User();
         
@@ -26,7 +32,7 @@ public class Server {
         		testUser.setBlockedFlag(false);
         		testUser.setUserState(UserState.OFFLINE);
         		testUser.setThreadList(new ArrayList<MessageThread>());
-
+        		
                 usersList.add(testUser);
                 testUser2 = new User();
         		testUser2.setUserType(UserType.DEFAULT);
@@ -102,11 +108,45 @@ public class Server {
     
     public static void loadUsers() {
     	File userFile = new File("Users.txt");
+    	User tempUser = null;
     	try {
     		Scanner fScanner = new Scanner(userFile);
     		while(fScanner.hasNextLine()) {
     			String data = fScanner.nextLine();
-    			String[] dataLoad = data.split();
+    			String[] dataLoad = data.split(", ");
+    			int lID = Integer.parseInt(dataLoad[0]);
+    			UserType lUT = UserType.DEFAULT;
+    			switch(dataLoad[1]) {
+    			case "ADMIN":
+    				lUT = UserType.ADMIN;
+    				break;
+    			case "REGULAR":
+    				lUT = UserType.REGULAR;
+    				break;
+    			default:
+    				break;
+    			}
+    			boolean lBool = false;
+    			if(dataLoad[6].equalsIgnoreCase("true")) {
+    				lBool = true;
+    			}
+    			UserState lUS = UserState.ONLINE;
+    			switch(dataLoad[7]) {
+    			case "OFFLINE":
+    				lUS = UserState.OFFLINE;
+    				break;
+    			case "SPAM":
+    				lUS = UserState.SPAM;
+    				break;
+    			case "AWAY":
+    				lUS = UserState.AWAY;
+    				break;
+    			default:
+    				break;
+    			}
+    			
+    			tempUser = new User(lID, lUT, dataLoad[2], dataLoad[3], dataLoad[4], dataLoad[5], lBool, lUS, new ArrayList<MessageThread>());
+    			usersList.add(tempUser);
     		}
     	}catch(Exception e) {
     		return;
@@ -116,6 +156,13 @@ public class Server {
     
     public static void saveUsers() {
         try {
+        	for(int i=0; i<usersList.size()-1; i++) {
+        		for(int j = 1; j < usersList.size(); j++) {
+        			if(usersList.get(i).getUsername().contentEquals(usersList.get(j).getUsername())) {
+        				usersList.remove(j);
+        			}
+        		}
+            }
             FileWriter out = new FileWriter(new File("Users.txt"));
             String outputString = "";
             
