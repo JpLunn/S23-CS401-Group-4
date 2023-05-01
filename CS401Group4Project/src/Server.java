@@ -205,9 +205,9 @@ class ClientHandler implements Runnable {
                     Message msg = msgQueue.poll(); 
                     
 //                    if the message type is login log the user in
-                    Message loginResponseMsg = Server.checkLogin(msg);
-                    if(msg.getType()==MessageType.LOGIN) {
-                        if(!loggedIn) {
+                    if(!loggedIn) {
+                        Message loginResponseMsg = Server.checkLogin(msg);
+                        if(msg.getType()==MessageType.LOGIN) {
                             if(loginResponseMsg.getType()==MessageType.VALID_LOGIN) {
                                 this.loggedIn = true;
                                 this.user = loginResponseMsg.getOwner();
