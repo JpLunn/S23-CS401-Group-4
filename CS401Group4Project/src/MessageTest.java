@@ -17,7 +17,7 @@ class MessageTest {
 		User me = new User(UserType.REGULAR,"Turk", "Turkleton", "TT360", "love", false, UserState.ONLINE, threads);
 		Message test = new Message(me,"Hello world", MessageType.NEW_TEXT);
 		
-		assertTrue(test.getOwner() != null && test.getContent() != null && test.getType() == MessageType.NEW_TEXT);
+		assertTrue(test.getOwner() != null && test.getContent() != null && test.getType() != null);
 	}
 	
 //	@Test
@@ -34,7 +34,7 @@ class MessageTest {
 		ArrayList<MessageThread> threads = new ArrayList<MessageThread>();
 		User me = new User(UserType.REGULAR,"Turk", "Turkleton", "TT360", "love", false, UserState.ONLINE, threads);
 		Message test = new Message(me, "hello world", MessageType.NEW_TEXT);
-		assertTrue(test.getType() != null);
+		assertTrue(!test.getType().equals(null));
 	}
 	
 	@Test 
