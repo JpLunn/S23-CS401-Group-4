@@ -212,7 +212,7 @@ class ClientHandler implements Runnable {
                         if(!loggedIn) {
                             checkLogin(msg);
                             this.loggedIn = true;   
-                            objectOutputStream.writeObject(new Message(MessageType.Login,"Success",""));
+                            objectOutputStream.writeObject(new Message(MessageType.LOGIN,"Success",""));
                         }
                     }
                     
