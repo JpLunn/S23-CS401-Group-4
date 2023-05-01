@@ -231,14 +231,25 @@ class ClientHandler implements Runnable {
                         // checks the message type of the message
                         switch (msg.getType()) {
                         
-                        case Logout: // if logout message it logs the user out and returns a success logout message and closes the connection
-                            objectOutputStream.writeObject(new Message(MessageType.Logout,"Success",""));
+                        case LOGOUT: // if logout message it logs the user out and returns a success logout message and closes the connection
+                            objectOutputStream.writeObject(new Message(MessageType.LOGOUT,"Success",""));
+                            
+                            // Show that client has logged out
+                            System.out.println("Client successfully logged out");
+                            
                             loggedIn = false;
                             endConnection = true;
+                            
+                            // Close sockets
+                            objectOutputStream.close();
+                            inputStream.close();
+                            
                             break;
-                        case Text: // if text message it returns a new message with the data capitalized.
-                            objectOutputStream.writeObject(new Message(MessageType.Text,"Success",msg.getText().toUpperCase()));
+                        case NEW_TEXT: // if text message it returns a new message with the data capitalized.
+                            objectOutputStream.writeObject(new Message(MessageType.NEW_TEXT,"Success",msg.getContent().toUpperCase()));
                             break;
+						default:
+							break;
                         }
                     } 
                 }
