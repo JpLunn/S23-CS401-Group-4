@@ -199,20 +199,23 @@ class ClientHandler implements Runnable {
             while(!endConnection) {
              // reads adds any incoming messages to the queue
                 Message newMsg = (Message) objectInputStream.readObject();
-                if(newMsg.getType().equals(MessageType.LOGIN)) {
-                	System.out.println("LoginAttempted");
-                }
                 msgQueue.add(newMsg);
-                
+
                 if(!msgQueue.isEmpty()) {
                     Message msg = msgQueue.poll(); 
                     
 //                    if the message type is login log the user in
+                    Message loginResponseMsg = Server.checkLogin(msg);
                     if(msg.getType()==MessageType.LOGIN) {
                         if(!loggedIn) {
-                            checkLogin(msg);
-                            this.loggedIn = true;   
-                            objectOutputStream.writeObject(new Message(MessageType.LOGIN,"Success",""));
+                            if(loginResponseMsg.getType()==MessageType.VALID_LOGIN) {
+                                this.loggedIn = true;
+                                this.user = loginResponseMsg.getOwner();
+                                objectOutputStream.writeObject(loginResponseMsg);
+                                
+                            } else {
+                                objectOutputStream.writeObject(loginResponseMsg);
+                            }
                         }
                     }
                     
