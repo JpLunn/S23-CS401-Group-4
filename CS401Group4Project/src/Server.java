@@ -10,10 +10,13 @@ import java.util.Scanner;
 public class Server {
     static private ArrayList<User> usersList = new ArrayList<User>();
     static private ArrayList<MessageThread>  messageThreads = new ArrayList<MessageThread>();
+    static public List<ClientHandler> clients = new ArrayList<>();
     static private int MAXMSGLEN = 100;
     
     public static void main(String[] args) {
-        User testUser = new User();
+                User testUser = new User();
+                User testUser2 = new User();
+        
         		testUser.setUserType(UserType.ADMIN);
         		testUser.setFirstName("John");
         		testUser.setLastName("Doe");
@@ -22,18 +25,32 @@ public class Server {
         		testUser.setBlockedFlag(false);
         		testUser.setUserState(UserState.OFFLINE);
         		testUser.setThreadList(new ArrayList<MessageThread>());
-        usersList.add(testUser);
-        testUser = new User();
-		testUser.setUserType(UserType.DEFAULT);
-		testUser.setFirstName("Henry");
-		testUser.setLastName("Bnafa");
-		testUser.setUsername("HBnafa");
-		testUser.setPassword("Testing2");
-		testUser.setBlockedFlag(false);
-		testUser.setUserState(UserState.OFFLINE);
-		testUser.setThreadList(new ArrayList<MessageThread>());
-		usersList.add(testUser);
-        saveUsers();
+
+                usersList.add(testUser);
+                testUser2 = new User();
+        		testUser2.setUserType(UserType.DEFAULT);
+        		testUser2.setFirstName("Henry");
+        		testUser2.setLastName("Bnafa");
+        		testUser2.setUsername("HBnafa");
+        		testUser2.setPassword("Testing2");
+        		testUser2.setBlockedFlag(false);
+        		testUser2.setUserState(UserState.OFFLINE);
+        		testUser2.setThreadList(new ArrayList<MessageThread>());
+        		usersList.add(testUser);
+                saveUsers();
+                
+                ArrayList<User> testList = new ArrayList<User>();
+                ArrayList<Message> msgTestList = new ArrayList<Message>();
+                testList.add(testUser2);
+                testList.add(testUser);
+                
+                for(int i=0; i<10; i++) {
+                    Message msg = new Message(testUser, "message #"+ i, MessageType.NEW_TEXT, 1 );
+                    msgTestList.add(msg);
+                    msg = new Message(testUser2, "message #"+ i, MessageType.NEW_TEXT, 1 );
+                    msgTestList.add(msg);
+                }
+                MessageThread msgThread = new MessageThread(testList,1, msgTestList);
         
         ServerSocket server = null;
         
@@ -166,30 +183,17 @@ public class Server {
     
     public static void sendMessageThread(Message newMessage) {
         MessageThread newThread = checkMessageThread(newMessage);
-        for(int i=0; i<newThread.getParticipants().size(); i++) {
-            newThread.getParticipants().get(i).getSocket();
-            // get the outputstream of client
-            OutputStream outputStream;
-            try {
-                outputStream = newThread.getParticipants().get(i).getSocket().getOutputStream();
-                
-                // Create a ObjectOutpuitStream so we can send objects to clients
-                ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
-                
-
-                // get the input stream from the connected socket
-                InputStream inputStream = newThread.getParticipants().get(i).getSocket().getInputStream();
-
-                // create a ObjectInputStream so we can read data from it.
-                ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
-                
-                objectOutputStream.writeObject(newMessage);
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+        for(ClientHandler client : clients) {
+            for(int i=0; i<newThread.getParticipants().size(); i++) {
+                if(client.user ==  newThread.getParticipants().get(i));
+                System.out.println("client: " + client);
+                System.out.println("user1: " + client.user);
+                System.out.println("user2: " + newThread.getParticipants().get(i));
+                // get the outputstream of client
+                    client.sendMessage(newMessage);
             }
-           
         }
+
     }
     
     public static Message checkLogin(Message msg) {
@@ -214,16 +218,39 @@ public class Server {
 }
 
 class ClientHandler implements Runnable {
-    private final Socket clientSocket;
+    public final Socket clientSocket;
     private boolean loggedIn = false; // checks if client has logged in
     private boolean endConnection = false; // checks if user wants to close connection
     private Queue<Message> msgQueue; // queue for messages 
-    private User user;
+    public User user;
     
     public ClientHandler(Socket clientSocket) {
         this.clientSocket = clientSocket;
         msgQueue = new LinkedList<Message>();
         //user.setSocket(clientSocket);
+    }
+    
+    public void sendMessage(Message newMessage) {
+        try {
+            
+            // get the outputstream of client
+            OutputStream outputStream = clientSocket.getOutputStream();
+            
+            // Create a ObjectOutpuitStream so we can send objects to clients
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+            
+
+            // get the input stream from the connected socket
+            InputStream inputStream = clientSocket.getInputStream();
+
+            // create a ObjectInputStream so we can read data from it.
+            ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
+            
+            objectOutputStream.writeObject(newMessage);
+        } catch (IOException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+            
     }
     
     public void run() {
@@ -260,6 +287,7 @@ class ClientHandler implements Runnable {
                             if(loginResponseMsg.getType()==MessageType.VALID_LOGIN) {
                                 this.loggedIn = true;
                                 this.user = loginResponseMsg.getOwner();
+                                Server.clients.add(this);
                                 objectOutputStream.writeObject(loginResponseMsg);
                                 
                             } else {
@@ -276,7 +304,7 @@ class ClientHandler implements Runnable {
                         switch (msg.getType()) {
                         
                         case LOGOUT: // if logout message it logs the user out and returns a success logout message and closes the connection
-                            objectOutputStream.writeObject(new Message(MessageType.LOGOUT,"Success"));
+                            objectOutputStream.writeObject(new Message(MessageType.LOGOUT));
                             
                             // Show that client has logged out
                             System.out.println("Client successfully logged out");
@@ -290,10 +318,7 @@ class ClientHandler implements Runnable {
                             
                             break;
                         case NEW_TEXT: // if text message it returns a new message with the data capitalized.
-                            objectOutputStream.writeObject(new Message(MessageType.NEW_TEXT, msg.getContent().toUpperCase()));
-                            MessageThread newThread = Server.checkMessageThread(msg);
-                            
-                            objectOutputStream.writeObject(newThread);
+                            Server.sendMessageThread(msg);
                             break;
 						default:
 							break;
@@ -312,5 +337,7 @@ class ClientHandler implements Runnable {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+        
+
     }
 }
