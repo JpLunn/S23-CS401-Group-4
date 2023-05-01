@@ -51,7 +51,7 @@ public class Server {
                     msgTestList.add(msg);
                 }
                 MessageThread msgThread = new MessageThread(testList,1, msgTestList);
-        
+                messageThreads.add(msgThread);
         ServerSocket server = null;
         
         try {
@@ -182,13 +182,16 @@ public class Server {
     }
     
     public static void sendMessageThread(Message newMessage) {
+        System.out.println("message content 2nd stop: " + newMessage.getContent());
         MessageThread newThread = checkMessageThread(newMessage);
+//        System.out.println("Message Thread ID is: "+newThread.getID());
         for(ClientHandler client : clients) {
             for(int i=0; i<newThread.getParticipants().size(); i++) {
                 if(client.user ==  newThread.getParticipants().get(i));
+                
                 System.out.println("client: " + client);
-                System.out.println("user1: " + client.user);
-                System.out.println("user2: " + newThread.getParticipants().get(i));
+//                System.out.println("user1: " + client.user);
+//                System.out.println("user2: " + newThread.getParticipants().get(i));
                 // get the outputstream of client
                     client.sendMessage(newMessage);
             }
@@ -211,8 +214,15 @@ public class Server {
     // Finds the threadID for the Message in Array list.
     public static MessageThread checkMessageThread(Message msg) {
     	int threadID = msg.getMessageThreadID();
-    	MessageThread thread = messageThreads.get(threadID);
-    	return thread; 	
+//    	System.out.println( msg.getMessageThreadID());
+//    	System.out.println("Message threads size: " +messageThreads.size());
+    	for(int i=0; i<messageThreads.size(); i++) {
+    	    MessageThread thread = messageThreads.get(i);
+    	    if(threadID == messageThreads.get(i).getID()) {
+    	        return thread;
+    	    }
+    	}    	
+    	return null;
     }
     
 }
@@ -232,20 +242,18 @@ class ClientHandler implements Runnable {
     
     public void sendMessage(Message newMessage) {
         try {
-            
+            System.out.println("message content 3rd stop: "+ newMessage.getContent());
             // get the outputstream of client
+            System.out.println();
             OutputStream outputStream = clientSocket.getOutputStream();
             
             // Create a ObjectOutpuitStream so we can send objects to clients
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
-            
 
             // get the input stream from the connected socket
-            InputStream inputStream = clientSocket.getInputStream();
-
             // create a ObjectInputStream so we can read data from it.
-            ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
-            
+
+            System.out.println(newMessage.getType()+ "-----"+newMessage.getContent()+"-----" + newMessage.getMessageThreadID());
             objectOutputStream.writeObject(newMessage);
         } catch (IOException e) {
             System.out.println("Error: " + e.getMessage());
@@ -279,6 +287,8 @@ class ClientHandler implements Runnable {
 
                 if(!msgQueue.isEmpty()) {
                     Message msg = msgQueue.poll(); 
+                    System.out.println("message content 0st stop: " + msg.getContent());
+                    System.out.println("message type 0st stop: " + msg.getContent());
                     
 //                    if the message type is login log the user in
                     if(!loggedIn) {
@@ -318,6 +328,8 @@ class ClientHandler implements Runnable {
                             
                             break;
                         case NEW_TEXT: // if text message it returns a new message with the data capitalized.
+                            System.out.println("message content 1st stop: " + msg.getContent());
+                            System.out.println("message type 1st stop: " + msg.getContent());
                             Server.sendMessageThread(msg);
                             break;
 						default:
