@@ -4,13 +4,17 @@ import java.net.Socket;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
-import java.io.Serializable;
+import java.util.Scanner;
+
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 public class Client {
-	private User currentUser;
+	static private User currentUser;
 	//private ListArray<Notifications> notifications;
-	private boolean SessionActive = false;
-	private Queue<Message> messageQueue = new LinkedList<>();
+	static private boolean sessionActive = true;
+	static private Queue<Message> messageQueue = new LinkedList<>();
+	static private boolean loggedIn = false;
 	
 	
 	
@@ -26,12 +30,64 @@ public class Client {
             
             // Send a message to the server
 //            out.println("Hello from the client");
-            
+            try {
+                OutputStream oStream = socket.getOutputStream();
+                ObjectOutputStream objectOutputStream = new ObjectOutputStream(oStream);
+                InputStream iStream = socket.getInputStream();
+                ObjectInputStream objectInputStream = new ObjectInputStream(iStream);
+                
+                
+                currentUser = new User();
+                currentUser.setPassword("Testing");
+                currentUser.setUsername("JDoe");
+                Message loginMsg = new Message(currentUser, MessageType.LOGIN);
+                System.out.println(currentUser.getPassword());
+                System.out.println(currentUser.getUsername());
+                objectOutputStream.writeObject(loginMsg);
+                
+                while(sessionActive) {
+                    if(loggedIn == false) {
+                        Message inMessage = (Message) objectInputStream.readObject();
+//                        objectInputStream.reset();
+                        objectOutputStream.flush();
+                        System.out.println(inMessage.getType());
+                        if(inMessage.getType().equals(MessageType.VALID_LOGIN)) {
+                            loggedIn = true;
+                            currentUser = inMessage.getOwner();
+                        } else {
+                            System.out.println("Invalid Login");
+                        }
+                    } 
+                    if(loggedIn == true) {
+                        System.out.println("Enter a message to send");
+                        Scanner sc= new Scanner(System.in); //System.in is a standard input stream.
+                        String content = sc.nextLine();
+                        System.out.println(content);
+                        Message outMessage = new Message(currentUser,content,1);
+                        System.out.println(outMessage.getContent());
+                        objectOutputStream.writeObject(outMessage);
+                        objectOutputStream.flush();
+//                        Message newMsg = new Message();
+                        objectInputStream.readObject();
+                        objectInputStream.reset();
+                        
+                        
+//                        System.out.println(newMsg.getContent());
+
+                    }
+                }
+                
+            }catch(IOException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+
             // Read the server's response
 //            String response = in.readLine();
 //            System.out.println("Received from server: " + response);
             
-            GUI clientGUI = new GUI(socket);
+//            GUI clientGUI = new GUI(socket);
             // Close the input, output, and socket
 //            in.close();
 //            out.close();
