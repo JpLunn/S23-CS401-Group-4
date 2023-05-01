@@ -36,7 +36,7 @@ public class Server {
         		testUser2.setBlockedFlag(false);
         		testUser2.setUserState(UserState.OFFLINE);
         		testUser2.setThreadList(new ArrayList<MessageThread>());
-        		usersList.add(testUser);
+        		usersList.add(testUser2);
                 saveUsers();
                 
                 ArrayList<User> testList = new ArrayList<User>();
