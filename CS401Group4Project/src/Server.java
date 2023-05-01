@@ -12,7 +12,8 @@ public class Server {
     static private ArrayList<MessageThread>  messageThreads = new ArrayList<MessageThread>();
     static public List<ClientHandler> clients = new ArrayList<>();
     static private int MAXMSGLEN = 100;
-    
+    final static int PORT = 8000;
+	
     public static void main(String[] args) {
                 loadUsers();
                 
@@ -73,8 +74,9 @@ public class Server {
         
         try {
             // Create a ServerSocket to listen for incoming connections on port 8000
-            server = new ServerSocket(8000);
+            server = new ServerSocket(PORT);
             server.setReuseAddress(true);
+            System.out.println("Listening on " + PORT);
             System.out.println("ServerSocket awaiting connections...");
             
             while (true) {
@@ -318,12 +320,13 @@ class ClientHandler implements Runnable {
         try {
 //            System.out.println("message content 3rd stop: "+ newMessage.getContent());
             // get the outputstream of client
-
+        	Date d = new Date();
             // get the input stream from the connected socket
             // create a ObjectInputStream so we can read data from it.
-            
+            System.out.println("Sending : " + newMessage.getContent());
 //            System.out.println(newMessage.getType()+ "-----"+newMessage.getContent()+"-----" + newMessage.getMessageThreadID());
             objectOutputStream.writeObject(newMessage);
+            System.out.println("Sent successfully on "+d+": " + newMessage.getContent());
         } catch (IOException e) {
             System.out.println("Error: " + e.getMessage());
         }
