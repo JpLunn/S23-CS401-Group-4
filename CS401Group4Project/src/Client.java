@@ -24,12 +24,6 @@ public class Client {
         	// Create a socket to connect to the server on port 8000
             Socket socket = new Socket("localhost", 8000);
             
-            // Get the input and output streams for the socket
-//            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-//            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-            
-            // Send a message to the server
-//            out.println("Hello from the client");
             try {
                 OutputStream oStream = socket.getOutputStream();
                 ObjectOutputStream objectOutputStream = new ObjectOutputStream(oStream);
@@ -37,16 +31,8 @@ public class Client {
                 ObjectInputStream objectInputStream = new ObjectInputStream(iStream);
                 Scanner sc= new Scanner(System.in); //System.in is a standard input stream.
                 
-                
-                currentUser = new User();
-                System.out.println("Enter password");
-                currentUser.setPassword(sc.nextLine());
-                System.out.println("Enter username");
-                currentUser.setUsername(sc.nextLine());
-                
-                Message loginMsg = new Message(currentUser, MessageType.LOGIN);
-//                System.out.println(currentUser.getPassword());
-//                System.out.println(currentUser.getUsername());
+                GUI clientGUI = new GUI();
+                Message loginMsg = clientGUI.login();
                 objectOutputStream.writeObject(loginMsg);
                 
                 while(sessionActive) {
@@ -58,11 +44,13 @@ public class Client {
                             loggedIn = true;
                             currentUser = inMessage.getOwner();
                         } else {
-                            System.out.println("Invalid Login");
+                        	JOptionPane.showMessageDialog(clientGUI.getFrame(), "Invalid Login");
+                            loginMsg = clientGUI.login();
                         }
                     } 
                     
                     if(loggedIn == true) {
+                    	clientGUI = new GUI(currentUser);
                         System.out.println("Enter a message to send");
                         
                         

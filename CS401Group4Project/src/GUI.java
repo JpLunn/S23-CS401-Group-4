@@ -20,13 +20,20 @@ import java.io.*;
 public class GUI implements ClientInterface{
 	
 	
-	private JFrame frame;
+	private static JFrame frame;
 	private JTextField newMessageField;
 	private User activeUser= null;
 	private boolean loggedIN = false;
 	
+	public GUI() {
+		
+	}
+	
 	public GUI(User loginUser) {
 		activeUser = loginUser;
+		this.frame = new JFrame(activeUser.getFirstName() + " " + activeUser.getLastName());
+		this.frame.setVisible(true);
+		this.createWindow();
 	}
 	
 	public GUI(Socket connectedSocket) {
@@ -79,7 +86,7 @@ public class GUI implements ClientInterface{
 		
 	}
 	
-	public Message login() {
+	public static Message login() {
 		JPanel panel = new JPanel(new BorderLayout(5, 5));
 
 	    JPanel label = new JPanel(new GridLayout(0, 1, 2, 2));
@@ -216,5 +223,8 @@ public class GUI implements ClientInterface{
 				return;
 			}
 		});
+	}
+	public JFrame getFrame() {
+		return this.frame;
 	}
 }
