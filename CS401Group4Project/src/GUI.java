@@ -30,15 +30,23 @@ public class GUI implements ClientInterface{
 	}
 	
 	public GUI(Socket connectedSocket) {
-		Message inMessage;
+		Message inMessage = null;
        	try {
        		OutputStream oStream = connectedSocket.getOutputStream();
        		ObjectOutputStream objOStream = new ObjectOutputStream(oStream);
        		InputStream iStream = connectedSocket.getInputStream();
        		ObjectInputStream objIStream = new ObjectInputStream(iStream);
        		while(loggedIN == false) {
-       			objOStream.writeObject(login());
+       			inMessage = login();
+       			if(inMessage == null) {return;}
+       			objOStream.writeObject(inMessage);
        			inMessage = (Message) objIStream.readObject();
+       			if(inMessage.getType().equals(MessageType.VALID_LOGIN)) {
+       				loggedIN = true;
+       			}
+       			else {
+       				JOptionPane.showMessageDialog(frame, "Invalid Login");
+       			}
        		}
        	}catch(IOException e) {
        		e.printStackTrace();
@@ -66,7 +74,7 @@ public class GUI implements ClientInterface{
 		} // etc.
 	}
 	
-	private void createMessageLoc() {
+	private void createMessageLog() {
 		
 	}
 	
@@ -78,14 +86,17 @@ public class GUI implements ClientInterface{
 	    label.add(new JLabel("Password", SwingConstants.RIGHT));
 	    panel.add(label, BorderLayout.WEST);
 
-	    JPanel controls = new JPanel(new GridLayout(0, 1, 2, 2));
+	    JPanel control = new JPanel(new GridLayout(0, 1, 2, 2));
 	    JTextField username = new JTextField();
-	    controls.add(username);
+	    control.add(username);
 	    JPasswordField password = new JPasswordField();
-	    controls.add(password);
-	    panel.add(controls, BorderLayout.CENTER);
+	    control.add(password);
+	    panel.add(control, BorderLayout.CENTER);
 
-	    JOptionPane.showConfirmDialog(frame, panel, "login", JOptionPane.OK_CANCEL_OPTION);
+	    int temp = JOptionPane.showConfirmDialog(frame, panel, "login", JOptionPane.OK_CANCEL_OPTION);
+	    if(temp == JOptionPane.CANCEL_OPTION) {
+	    	return null;
+	    }
 	    User tempUser = new User();
 	    tempUser.setUsername(username.getText());
 	    String tString;
