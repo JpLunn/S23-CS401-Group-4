@@ -72,6 +72,14 @@ public class Server {
         }
     }
     
+    public static User findUser(String userString) {
+        for(User user: usersList) {
+            if(user.getID() == Integer.valueOf(userString))
+                return user;
+        }
+        return null;
+    }
+    
    public static void loadMessages() {
         // Load messages from file
         try {
@@ -87,8 +95,9 @@ public class Server {
                 String[] splitLine = line.split(":::");
                 int threadID = Integer.parseInt(splitLine[0]);
                 String sender = splitLine[1];
+                User owner = findUser(sender);
                 String messageText = splitLine[2];
-                Message message = new Message(sender, messageText);
+                Message message = new Message(owner, messageText, threadID);
                 for (MessageThread thread : messageThreads) {
                     if (thread.getID() == threadID) {
                         thread.addMessage(message);

@@ -63,7 +63,7 @@ public class GUI implements ClientInterface{
 		
 	}
 	
-	private void processCommands() {
+	public void processCommands() {
 		
 	}
 	
