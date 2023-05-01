@@ -45,8 +45,8 @@ public class Client {
                 currentUser.setUsername(sc.nextLine());
                 
                 Message loginMsg = new Message(currentUser, MessageType.LOGIN);
-                System.out.println(currentUser.getPassword());
-                System.out.println(currentUser.getUsername());
+//                System.out.println(currentUser.getPassword());
+//                System.out.println(currentUser.getUsername());
                 objectOutputStream.writeObject(loginMsg);
                 
                 while(sessionActive) {
@@ -67,19 +67,19 @@ public class Client {
                         
                         
                         String userMessage = sc.nextLine();
-//                        String content = sc.nextLine();
-//                        System.out.println(userMessage);
-                        Message outMessage = new Message(currentUser,userMessage,1);
-                        
-//                        System.out.println(outMessage.getContent());
-                        
-                        objectOutputStream.writeObject(outMessage);
-//                        objectOutputStream.flush();
-//                        Message newMsg = new Message();
+                        if(userMessage.compareToIgnoreCase("refresh")!=0) {
+                            Message outMessage = new Message(currentUser,userMessage,1);
+                            
+//                          System.out.println(outMessage.getContent());
+                          
+                          objectOutputStream.writeObject(outMessage);
+//                          objectOutputStream.flush();
+//                          Message newMsg = new Message();
+                        }
                         Message newMsg= (Message) objectInputStream.readObject();
-//                        objectInputStream.reset();
-                        
-                        
+//                      objectInputStream.reset();
+                      
+                      
                         System.out.println(newMsg.getContent());
 
                     }

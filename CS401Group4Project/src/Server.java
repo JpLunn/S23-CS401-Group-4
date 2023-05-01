@@ -16,6 +16,7 @@ public class Server {
     public static void main(String[] args) {
                 User testUser = new User();
                 User testUser2 = new User();
+                User testUser3 = new User();
         
         		testUser.setUserType(UserType.ADMIN);
         		testUser.setFirstName("John");
@@ -31,12 +32,22 @@ public class Server {
         		testUser2.setUserType(UserType.DEFAULT);
         		testUser2.setFirstName("Henry");
         		testUser2.setLastName("Bnafa");
-        		testUser2.setUsername("test");
+        		testUser2.setUsername("HBnafa");
         		testUser2.setPassword("test");
         		testUser2.setBlockedFlag(false);
         		testUser2.setUserState(UserState.OFFLINE);
         		testUser2.setThreadList(new ArrayList<MessageThread>());
         		usersList.add(testUser2);
+                testUser3 = new User();
+                testUser3.setUserType(UserType.DEFAULT);
+                testUser3.setFirstName("Carl");
+                testUser3.setLastName("Higgins");
+                testUser3.setUsername("CHiggins");
+                testUser3.setPassword("test1");
+                testUser3.setBlockedFlag(false);
+                testUser3.setUserState(UserState.OFFLINE);
+                testUser3.setThreadList(new ArrayList<MessageThread>());
+                usersList.add(testUser3);
                 saveUsers();
                 
                 ArrayList<User> testList = new ArrayList<User>();
@@ -188,6 +199,7 @@ public class Server {
         for(ClientHandler client : clients) {
             for(int i=0; i<newThread.getParticipants().size(); i++) {
                 if(client.user ==  newThread.getParticipants().get(i)) {
+                    System.out.println("Sending to " +client.user.getUsername() + " : " + newMessage.getContent());
                     client.sendMessage(newMessage);
                 }
                 
@@ -262,7 +274,7 @@ class ClientHandler implements Runnable {
 
             // get the input stream from the connected socket
             // create a ObjectInputStream so we can read data from it.
-            System.out.println("Sending : " + newMessage.getContent());
+            
 //            System.out.println(newMessage.getType()+ "-----"+newMessage.getContent()+"-----" + newMessage.getMessageThreadID());
             objectOutputStream.writeObject(newMessage);
         } catch (IOException e) {
