@@ -11,6 +11,16 @@ public class Message implements Serializable {
 	private Boolean editedFlag;
 	private Date dateEdited;
 	private int messageThreadID = -1;
+	
+	//default constructor
+	public Message() {
+		this.type = MessageType.NEW_TEXT;
+		this.content = ("");
+		this.owner = null;
+		this.created = new Date();
+		this.editedFlag = false;
+		this.dateEdited = null;
+	}
 
 	public Message(MessageType MsgType) {
 		this.type = MsgType;
