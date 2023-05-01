@@ -15,12 +15,22 @@ public class Message implements Serializable {
 	public Message(MessageType type) {
 		this.type = type;
 	}
+   public Message(MessageType MsgType) {
+        this.type = MsgType;
+        this.content = ("");
+        this.setCreatedDate(new Date());
+   }
 	
 	public Message(User owner, String content, MessageType type) {
 		this.owner = owner;
 		this.content = content;
 		this.type = type;
 	}
+	public Message(User owner, MessageType type) {
+        this.setOwner(owner);
+        this.setType(type);
+        this.setCreatedDate(new Date());
+    }
 	
 	public Message(User owner, String content, int threadID) {
         this.owner = owner;
@@ -32,6 +42,10 @@ public class Message implements Serializable {
 		this.owner = owner;
 		this.content = content;
 	}
+
+   public void setType(MessageType MsgType) {
+        this.type = MsgType;
+    }
 
 	public MessageType getType() {
 		return this.type;

@@ -154,6 +154,15 @@ public class Server {
         
     }
     
+    public static Message checkLogin(Message msg) {
+        
+        for(User user: usersList) {
+            if(user == msg.getOwner())
+                return new Message(user, MessageType.VALID_LOGIN);
+        }
+        return new Message(MessageType.INVALID_LOGIN);
+    }
+    
 }
 
 class ClientHandler implements Runnable {
@@ -195,7 +204,34 @@ class ClientHandler implements Runnable {
                 }
                 msgQueue.add(newMsg);
                 
-                
+                if(!msgQueue.isEmpty()) {
+                    Message msg = msgQueue.poll(); 
+                    
+//                    if the message type is login log the user in
+                    if(msg.getType()==MessageType.LOGIN) {
+                        if(!loggedIn) {
+                            checkLogin(msg);
+                            this.loggedIn = true;   
+                            objectOutputStream.writeObject(new Message(MessageType.Login,"Success",""));
+                        }
+                    }
+                    
+                    // else it checks if the user is logged in
+                    else if(loggedIn) {
+                        // checks the message type of the message
+                        switch (msg.getType()) {
+                        
+                        case Logout: // if logout message it logs the user out and returns a success logout message and closes the connection
+                            objectOutputStream.writeObject(new Message(MessageType.Logout,"Success",""));
+                            loggedIn = false;
+                            endConnection = true;
+                            break;
+                        case Text: // if text message it returns a new message with the data capitalized.
+                            objectOutputStream.writeObject(new Message(MessageType.Text,"Success",msg.getText().toUpperCase()));
+                            break;
+                        }
+                    } 
+                }
             }
            
          // closes the socket connection
