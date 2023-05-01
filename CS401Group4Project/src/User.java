@@ -1,9 +1,11 @@
 import java.io.Serializable;
+import java.net.Socket;
 import java.util.ArrayList;
 
 public class User implements Serializable{
     private static int counter =0;
     private int id;
+    private Socket clientSocket;
     private UserType userType;
     private String firstName;
     private String lastName;
@@ -134,6 +136,13 @@ public class User implements Serializable{
 	public String toString() {
     	return id + "|" + userType + "|" + firstName + "|" + lastName + "|" + username + "|" + password + "|" +
     			blockedFlag + "|" + userState;
+    }
+	
+	public void setSocket (Socket clientSocket) {
+	    this.clientSocket = clientSocket;
+	}
+	public Socket getSocket () {
+        return this.clientSocket;
     }
 	
 }

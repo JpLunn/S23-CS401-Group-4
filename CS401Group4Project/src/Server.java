@@ -154,6 +154,34 @@ public class Server {
         
     }
     
+    public static void sendMessageThread(Message newMessage) {
+        MessageThread newThread = checkMessageThread(newMessage);
+        for(int i=0; i<newThread.getParticipants().size(); i++) {
+            newThread.getParticipants().get(i).getSocket();
+            // get the outputstream of client
+            OutputStream outputStream;
+            try {
+                outputStream = newThread.getParticipants().get(i).getSocket().getOutputStream();
+                
+                // Create a ObjectOutpuitStream so we can send objects to clients
+                ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+                
+
+                // get the input stream from the connected socket
+                InputStream inputStream = newThread.getParticipants().get(i).getSocket().getInputStream();
+
+                // create a ObjectInputStream so we can read data from it.
+                ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
+                
+                objectOutputStream.writeObject(newMessage);
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+           
+        }
+    }
+    
     public static Message checkLogin(Message msg) {
         
         for(User user: usersList) {
@@ -164,7 +192,7 @@ public class Server {
     }
     
     // Finds the threadID for the Message in Array list.
-    public MessageThread checkMessageThread(Message msg) {
+    public static MessageThread checkMessageThread(Message msg) {
     	int threadID = msg.getMessageThreadID();
     	MessageThread thread = messageThreads.get(threadID);
     	return thread; 	
@@ -182,6 +210,7 @@ class ClientHandler implements Runnable {
     public ClientHandler(Socket clientSocket) {
         this.clientSocket = clientSocket;
         msgQueue = new LinkedList<Message>();
+        user.setSocket(clientSocket);
     }
     
     public void run() {
@@ -226,6 +255,8 @@ class ClientHandler implements Runnable {
                         }
                     }
                     
+                    
+                    
                     // else it checks if the user is logged in
                     else if(loggedIn) {
                         // checks the message type of the message
@@ -247,6 +278,9 @@ class ClientHandler implements Runnable {
                             break;
                         case NEW_TEXT: // if text message it returns a new message with the data capitalized.
                             objectOutputStream.writeObject(new Message(MessageType.NEW_TEXT,"Success",msg.getContent().toUpperCase()));
+                            MessageThread newThread = checkMessageThread(msg);
+                            
+                            objectOutputStream.writeObject(newThread);
                             break;
 						default:
 							break;
