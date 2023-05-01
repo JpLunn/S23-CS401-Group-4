@@ -51,11 +51,14 @@ public class Message implements Serializable {
 		this.setType(type);
 		this.setCreatedDate(new Date());
 	}
+	
 
 	public Message(User owner, String content, int threadID) {
+	    System.out.println("ENTERED HERE");
 		this.owner = owner;
-		this.messageThreadID = Integer.valueOf(threadID);
+		this.messageThreadID = threadID;
 		this.type = MessageType.NEW_TEXT;
+		this.content = content;
 		this.setCreatedDate(new Date());
 	}
 
