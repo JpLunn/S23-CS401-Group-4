@@ -9,7 +9,7 @@ public class Client {
 	private User currentUser;
 	//private ListArray<Notifications> notifications;
 	private boolean SessionActive = false;
-	private Queue<Message> messageQueue = new LinkedList();
+	private Queue<Message> messageQueue = new LinkedList<>();
 	
 	
 	
