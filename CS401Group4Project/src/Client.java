@@ -43,14 +43,16 @@ public class Client {
                         if(inMessage.getType().equals(MessageType.VALID_LOGIN)) {
                             loggedIn = true;
                             currentUser = inMessage.getOwner();
+                            clientGUI = new GUI(currentUser);
                         } else {
                         	JOptionPane.showMessageDialog(clientGUI.getFrame(), "Invalid Login");
                             loginMsg = clientGUI.login();
+                            objectOutputStream.writeObject(loginMsg);
                         }
                     } 
                     
                     if(loggedIn == true) {
-                    	clientGUI = new GUI(currentUser);
+                    	
                         System.out.println("Enter a message to send");
                         
                         

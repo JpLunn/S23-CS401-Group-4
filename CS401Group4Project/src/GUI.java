@@ -36,39 +36,42 @@ public class GUI implements ClientInterface{
 		this.createWindow();
 	}
 	
-	public GUI(Socket connectedSocket) {
-		Message inMessage = null;
-       	try {
-       		OutputStream oStream = connectedSocket.getOutputStream();
-       		ObjectOutputStream objOStream = new ObjectOutputStream(oStream);
-       		InputStream iStream = connectedSocket.getInputStream();
-       		ObjectInputStream objIStream = new ObjectInputStream(iStream);
-       		while(loggedIN == false) {
-       			inMessage = login();
-       			if(inMessage == null) {return;}
-       			objOStream.writeObject(inMessage);
-       			inMessage = (Message) objIStream.readObject();
-       			if(inMessage.getType().equals(MessageType.VALID_LOGIN)) {
-       				loggedIN = true;
-       				activeUser = inMessage.getOwner();
-       			}
-       			else {
-       				JOptionPane.showMessageDialog(frame, "Invalid Login");
-       			}
-       		}
-       	}catch(IOException e) {
-       		e.printStackTrace();
-       	} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		try {
-       		this.frame = new JFrame(activeUser.getFirstName() + " " + activeUser.getLastName());
-   			this.frame.setVisible(true);
-   		} catch (Exception e) {
-   			e.printStackTrace();
-   		}
-   	createWindow();
-	}
+	/*
+	 * Initial Testing GUI Constructor - Depreciated
+	 */
+//	public GUI(Socket connectedSocket) {
+//		Message inMessage = null;
+//       	try {
+//       		OutputStream oStream = connectedSocket.getOutputStream();
+//       		ObjectOutputStream objOStream = new ObjectOutputStream(oStream);
+//       		InputStream iStream = connectedSocket.getInputStream();
+//       		ObjectInputStream objIStream = new ObjectInputStream(iStream);
+//       		while(loggedIN == false) {
+//       			inMessage = login();
+//       			if(inMessage == null) {return;}
+//       			objOStream.writeObject(inMessage);
+//       			inMessage = (Message) objIStream.readObject();
+//       			if(inMessage.getType().equals(MessageType.VALID_LOGIN)) {
+//       				loggedIN = true;
+//       				activeUser = inMessage.getOwner();
+//       			}
+//       			else {
+//       				JOptionPane.showMessageDialog(frame, "Invalid Login");
+//       			}
+//       		}
+//       	}catch(IOException e) {
+//       		e.printStackTrace();
+//       	} catch (ClassNotFoundException e) {
+//			e.printStackTrace();
+//		}
+//		try {
+//       		this.frame = new JFrame(activeUser.getFirstName() + " " + activeUser.getLastName());
+//   			this.frame.setVisible(true);
+//   		} catch (Exception e) {
+//   			e.printStackTrace();
+//   		}
+//   	createWindow();
+//	}
 	
 	private void createMessage(MessageType type, String content) {
 		// Create instance of the message class
@@ -114,7 +117,8 @@ public class GUI implements ClientInterface{
 	}
 	
 	private void logout() {
-		
+		JPanel panel = new JPanel();
+		int temp = JOptionPane.showConfirmDialog(frame, panel , "Would you like to Logout", JOptionPane.YES_NO_OPTION)
 	}
 	
 	public void processCommands() {
@@ -151,8 +155,8 @@ public class GUI implements ClientInterface{
 		JMenuItem CreateNewMessage = new JMenuItem("New Message");
 		File.add(CreateNewMessage);
 		
-		JMenuItem LoginButton = new JMenuItem("Login");
-		File.add(LoginButton);
+//		JMenuItem LoginButton = new JMenuItem("Login");
+//		File.add(LoginButton);
 		
 		JMenuItem LogoutMenu = new JMenuItem("Logout");
 		File.add(LogoutMenu);
@@ -204,7 +208,7 @@ public class GUI implements ClientInterface{
 		
 		
 		
-		LoginButton.addActionListener(new ActionListener() {
+		LogoutMenu.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent mA) {
 				login();
 			}});
