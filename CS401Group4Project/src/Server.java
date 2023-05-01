@@ -163,6 +163,13 @@ public class Server {
         return new Message(MessageType.INVALID_LOGIN);
     }
     
+    // Finds the threadID for the Message in Array list.
+    public MessageThread checkMessageThread(Message msg) {
+    	int threadID = msg.getMessageThreadID();
+    	MessageThread thread = messageThreads.get(threadID);
+    	return thread; 	
+    }
+    
 }
 
 class ClientHandler implements Runnable {
