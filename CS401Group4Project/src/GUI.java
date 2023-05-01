@@ -43,6 +43,7 @@ public class GUI implements ClientInterface{
        			inMessage = (Message) objIStream.readObject();
        			if(inMessage.getType().equals(MessageType.VALID_LOGIN)) {
        				loggedIN = true;
+       				activeUser = inMessage.getOwner();
        			}
        			else {
        				JOptionPane.showMessageDialog(frame, "Invalid Login");
@@ -54,7 +55,7 @@ public class GUI implements ClientInterface{
 			e.printStackTrace();
 		}
 		try {
-       		this.frame = new JFrame();
+       		this.frame = new JFrame(activeUser.getFirstName() + " " + activeUser.getLastName());
    			this.frame.setVisible(true);
    		} catch (Exception e) {
    			e.printStackTrace();
@@ -131,7 +132,7 @@ public class GUI implements ClientInterface{
 	
 	private void createWindow() {
 		//frame = new JFrame();
-		frame.setBounds(100, 100, 490, 333);
+		frame.setBounds(100, 100, 650, 400);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		JMenuBar menuBar = new JMenuBar();

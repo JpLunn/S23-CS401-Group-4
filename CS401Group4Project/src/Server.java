@@ -23,6 +23,16 @@ public class Server {
         		testUser.setUserState(UserState.OFFLINE);
         		testUser.setThreadList(new ArrayList<MessageThread>());
         usersList.add(testUser);
+        testUser = new User();
+		testUser.setUserType(UserType.DEFAULT);
+		testUser.setFirstName("Henry");
+		testUser.setLastName("Bnafa");
+		testUser.setUsername("HBnafa");
+		testUser.setPassword("Testing2");
+		testUser.setBlockedFlag(false);
+		testUser.setUserState(UserState.OFFLINE);
+		testUser.setThreadList(new ArrayList<MessageThread>());
+		usersList.add(testUser);
         saveUsers();
         
         ServerSocket server = null;
