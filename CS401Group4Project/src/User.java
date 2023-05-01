@@ -144,5 +144,8 @@ public class User implements Serializable{
 	public Socket getSocket () {
         return this.clientSocket;
     }
+	public UserState getUserState() {
+		return this.userState;
+	}
 	
 }

@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Scanner;
+import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -15,6 +16,7 @@ public class Client {
 	static private boolean sessionActive = true;
 	static private Queue<Message> messageQueue = new LinkedList<>();
 	static private boolean loggedIn = false;
+	static private ArrayList<User> userList;
 	
 	
 	
@@ -43,7 +45,10 @@ public class Client {
                         if(inMessage.getType().equals(MessageType.VALID_LOGIN)) {
                             loggedIn = true;
                             currentUser = inMessage.getOwner();
-                            clientGUI = new GUI(currentUser);
+                            userList = (ArrayList<User>) objectInputStream.readObject();
+                            
+                           
+                            clientGUI = new GUI(currentUser, userList);
                         } else {
                         	JOptionPane.showMessageDialog(clientGUI.getFrame(), "Invalid Login");
                             loginMsg = clientGUI.login();
@@ -52,7 +57,7 @@ public class Client {
                     } 
                     
                     if(loggedIn == true) {
-                    	
+            
                         System.out.println("Enter a message to send");
                         
                         

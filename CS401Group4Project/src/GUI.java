@@ -2,6 +2,8 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import org.w3c.dom.events.MouseEvent;
+
 import java.awt.EventQueue;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -10,6 +12,7 @@ import java.awt.LayoutManager;
 import java.awt.TextArea;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -24,13 +27,15 @@ public class GUI implements ClientInterface{
 	private JTextField newMessageField;
 	private User activeUser= null;
 	private boolean loggedIN = false;
+	private ArrayList<User> guiUserList;
 	
 	public GUI() {
 		
 	}
 	
-	public GUI(User loginUser) {
+	public GUI(User loginUser, ArrayList<User> loginList) {
 		activeUser = loginUser;
+		guiUserList = loginList;
 		this.frame = new JFrame(activeUser.getFirstName() + " " + activeUser.getLastName());
 		this.frame.setVisible(true);
 		this.createWindow();
@@ -118,7 +123,10 @@ public class GUI implements ClientInterface{
 	
 	private void logout() {
 		JPanel panel = new JPanel();
-		int temp = JOptionPane.showConfirmDialog(frame, panel , "Would you like to Logout", JOptionPane.YES_NO_OPTION)
+		int temp = JOptionPane.showConfirmDialog(frame, panel , "Would you like to Logout", JOptionPane.YES_NO_OPTION);
+		if(temp == 0) {
+			
+		}
 	}
 	
 	public void processCommands() {
@@ -171,13 +179,13 @@ public class GUI implements ClientInterface{
 		
 		JList list = new JList();
 		panel.add(list);
-		ArrayList<User> temp = new ArrayList<User>();
+		ArrayList<String> temp = new ArrayList<String>();
 		if(activeUser != null) {
-			for(int i = 0; i < activeUser.getThreadList().size(); i++) {
-				if(activeUser.getThreadList().get(i).equals(null)) {
+			for(int i = 0; i < guiUserList.size(); i++) {
+				if(guiUserList.get(i).equals(null)) {
 					break;
 				}
-				temp.add(activeUser.getThreadList().get(i).getParticipants().get(1));
+				temp.add(guiUserList.get(i).getUsername());
 			}
 		}
 
@@ -189,6 +197,11 @@ public class GUI implements ClientInterface{
 				return temp.get(index);
 			}
 		});
+//		list.addMouseListener(new MouseListener() {
+//			public void mouseClicked(MouseEvent e) {
+//				if(e.getCurrentTarget()
+//			}
+//		});
 		list.setVisibleRowCount(15);
 		list.setLayoutOrientation(JList.HORIZONTAL_WRAP);
 		
@@ -210,7 +223,7 @@ public class GUI implements ClientInterface{
 		
 		LogoutMenu.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent mA) {
-				login();
+				logout();
 			}});
 		CreateNewMessage.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent mA) {

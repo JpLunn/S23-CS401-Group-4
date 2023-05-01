@@ -8,8 +8,8 @@ import java.util.Queue;
 import java.util.Scanner;
 
 public class Server {
-    static private ArrayList<User> usersList = new ArrayList<User>();
-    static private ArrayList<MessageThread>  messageThreads = new ArrayList<MessageThread>();
+    static public ArrayList<User> usersList = new ArrayList<User>();
+    static public ArrayList<MessageThread>  messageThreads = new ArrayList<MessageThread>();
     static public List<ClientHandler> clients = new ArrayList<>();
     static private int MAXMSGLEN = 100;
     final static int PORT = 8000;
@@ -363,8 +363,10 @@ class ClientHandler implements Runnable {
                                 this.loggedIn = true;
                                 this.user = loginResponseMsg.getOwner();
                                 Server.clients.add(this);
+                                System.out.println(this.user.getUsername() + " has logged on.\n");
                                 objectOutputStream.writeObject(loginResponseMsg);
-                                
+                                this.user.setUserState(UserState.ONLINE);
+                           		objectOutputStream.writeObject(Server.usersList);
                             } else {
                                 objectOutputStream.writeObject(loginResponseMsg);
                             }
