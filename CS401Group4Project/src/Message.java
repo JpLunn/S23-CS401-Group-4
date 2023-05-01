@@ -32,12 +32,19 @@ public class Message implements Serializable {
 		this.type = MsgType;
 		this.content = status;
 	}
+	
 	public Message(User owner, String content, MessageType type) {
 		this.owner = owner;
 		this.content = content;
 		this.type = type;
 		this.setCreatedDate(new Date());
 	}
+   public Message(User owner, String content, MessageType type, int threadID) {
+        this.owner = owner;
+        this.content = content;
+        this.type = type;
+        this.setCreatedDate(new Date());
+    }
 
 	public Message(User owner, MessageType type) {
 		this.setOwner(owner);

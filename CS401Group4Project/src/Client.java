@@ -4,6 +4,7 @@ import java.net.Socket;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import java.io.Serializable;
 
 public class Client {
 	private User currentUser;
