@@ -17,7 +17,7 @@ public class Message implements Serializable {
    public Message(MessageType MsgType) {
         this.type = MsgType;
         this.content = ("");
-        this.setCreatedDate(new Date());
+        this.setCreationDate(new Date());
    }
 	
 	public Message(User owner, String content, MessageType type) {
@@ -28,7 +28,7 @@ public class Message implements Serializable {
 	public Message(User owner, MessageType type) {
         this.setOwner(owner);
         this.setType(type);
-        this.setCreatedDate(new Date());
+        this.setCreationDate(new Date());
     }
 	
 	public Message(User owner, String content, int threadID) {
@@ -61,10 +61,16 @@ public class Message implements Serializable {
 	public User getOwner() { //Owner is the Sender
 		return owner;
 	}
+   public void setOwner(User user) { //Owner is the Sender
+        this.owner = user;
+    }
 	
 	public Date getCreationDate() {
 		return created;
 	}
+	public void setCreationDate(Date date) {
+        this.created = date;
+    }
 	
 	public int getMessageThreadID() {
 		return messageThreadID;
