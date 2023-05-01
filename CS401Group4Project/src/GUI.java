@@ -10,8 +10,12 @@ import java.awt.LayoutManager;
 import java.awt.TextArea;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
+import java.io.IOException;
 import java.util.ArrayList;
+
+import java.net.*;
+import java.util.*;
+import java.io.*;
 
 public class GUI implements ClientInterface{
 	
@@ -19,24 +23,35 @@ public class GUI implements ClientInterface{
 	private JFrame frame;
 	private JTextField newMessageField;
 	private User activeUser= null;
-	
+	private boolean loggedIN = false;
 	
 	public GUI(User loginUser) {
 		activeUser = loginUser;
 	}
 	
-	public GUI() {
-       	EventQueue.invokeLater(new Runnable() {
-   			public void run() {
-   				try {
-   					GUI window = new GUI();
-   					window.frame.setVisible(true);
-   				} catch (Exception e) {
-   					e.printStackTrace();
-   				}
-   			}
-   		});
-		createWindow();
+	public GUI(Socket connectedSocket) {
+		Message inMessage;
+       	try {
+       		OutputStream oStream = connectedSocket.getOutputStream();
+       		ObjectOutputStream objOStream = new ObjectOutputStream(oStream);
+       		InputStream iStream = connectedSocket.getInputStream();
+       		ObjectInputStream objIStream = new ObjectInputStream(iStream);
+       		while(loggedIN == false) {
+       			objOStream.writeObject(login());
+       			inMessage = (Message) objIStream.readObject();
+       		}
+       	}catch(IOException e) {
+       		e.printStackTrace();
+       	} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		try {
+       		this.frame = new JFrame();
+   			this.frame.setVisible(true);
+   		} catch (Exception e) {
+   			e.printStackTrace();
+   		}
+   	createWindow();
 	}
 	
 	private void createMessage(MessageType type, String content) {
@@ -55,8 +70,30 @@ public class GUI implements ClientInterface{
 		
 	}
 	
-	public void login() {
-		
+	public Message login() {
+		JPanel panel = new JPanel(new BorderLayout(5, 5));
+
+	    JPanel label = new JPanel(new GridLayout(0, 1, 2, 2));
+	    label.add(new JLabel("Username", SwingConstants.RIGHT));
+	    label.add(new JLabel("Password", SwingConstants.RIGHT));
+	    panel.add(label, BorderLayout.WEST);
+
+	    JPanel controls = new JPanel(new GridLayout(0, 1, 2, 2));
+	    JTextField username = new JTextField();
+	    controls.add(username);
+	    JPasswordField password = new JPasswordField();
+	    controls.add(password);
+	    panel.add(controls, BorderLayout.CENTER);
+
+	    JOptionPane.showConfirmDialog(frame, panel, "login", JOptionPane.OK_CANCEL_OPTION);
+	    User tempUser = new User();
+	    tempUser.setUsername(username.getText());
+	    String tString;
+	    tString = password.getPassword().toString();
+	    tempUser.setPassword(tString);
+	    Message loginMessage = new Message(tempUser, "Login", MessageType.LOGIN);
+	    return loginMessage;
+	    
 	}
 	
 	private void logout() {
@@ -84,7 +121,7 @@ public class GUI implements ClientInterface{
 	}
 	
 	private void createWindow() {
-		frame = new JFrame();
+		//frame = new JFrame();
 		frame.setBounds(100, 100, 490, 333);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
@@ -114,11 +151,13 @@ public class GUI implements ClientInterface{
 		JList list = new JList();
 		panel.add(list);
 		ArrayList<User> temp = new ArrayList<User>();
-		for(int i = 0; i < activeUser.getThreadList().size(); i++) {
-			if(activeUser.getThreadList().get(i).equals(null)) {
-				break;
+		if(activeUser != null) {
+			for(int i = 0; i < activeUser.getThreadList().size(); i++) {
+				if(activeUser.getThreadList().get(i).equals(null)) {
+					break;
+				}
+				temp.add(activeUser.getThreadList().get(i).getParticipants().get(1));
 			}
-			temp.add(activeUser.getThreadList().get(i).getParticipants().get(1));
 		}
 
 		list.setModel(new AbstractListModel() {

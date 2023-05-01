@@ -190,6 +190,9 @@ class ClientHandler implements Runnable {
             while(!endConnection) {
              // reads adds any incoming messages to the queue
                 Message newMsg = (Message) objectInputStream.readObject();
+                if(newMsg.getType().equals(MessageType.LOGIN)) {
+                	System.out.println("LoginAttempted");
+                }
                 msgQueue.add(newMsg);
                 
                 
