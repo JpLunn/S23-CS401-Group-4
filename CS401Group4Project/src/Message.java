@@ -12,9 +12,8 @@ public class Message implements Serializable {
 	private Date dateEdited;
 	private int messageThreadID = -1;
 	
-	public Message(MessageType type) {
-		this.type = type;
-	}
+
+	
    public Message(MessageType MsgType) {
         this.type = MsgType;
         this.content = ("");
