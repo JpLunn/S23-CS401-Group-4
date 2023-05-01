@@ -31,7 +31,7 @@ public class Server {
             // Create a ServerSocket to listen for incoming connections on port 8000
             server = new ServerSocket(8000);
             server.setReuseAddress(true);
-            System.out.println("ServerSocket awaiting connections8...");
+            System.out.println("ServerSocket awaiting connections...");
             
             while (true) {
                 Socket client = server.accept();

@@ -44,9 +44,9 @@ public class GUI implements ClientInterface{
 		Message currMessage = new Message(activeUser, content, type);
 		
 		// Handle different message types
-		if(type == MessageType.LOGIN) {
+		if(type.equals(MessageType.LOGIN)) {
 			login();
-		} else if(type == MessageType.LOGOUT) {
+		} else if(type.equals(MessageType.LOGOUT)) {
 			logout();
 		} // etc.
 	}
