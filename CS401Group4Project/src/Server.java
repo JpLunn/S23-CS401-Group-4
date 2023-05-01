@@ -182,14 +182,14 @@ public class Server {
     }
     
     public static void sendMessageThread(Message newMessage) {
-        System.out.println("message content 2nd stop: " + newMessage.getContent());
+//        System.out.println("message content 2nd stop: " + newMessage.getContent());
         MessageThread newThread = checkMessageThread(newMessage);
 //        System.out.println("Message Thread ID is: "+newThread.getID());
         for(ClientHandler client : clients) {
             for(int i=0; i<newThread.getParticipants().size(); i++) {
                 if(client.user ==  newThread.getParticipants().get(i));
                 
-                System.out.println("client: " + client);
+//                System.out.println("client: " + client);
 //                System.out.println("user1: " + client.user);
 //                System.out.println("user2: " + newThread.getParticipants().get(i));
                 // get the outputstream of client
@@ -242,9 +242,9 @@ class ClientHandler implements Runnable {
     
     public void sendMessage(Message newMessage) {
         try {
-            System.out.println("message content 3rd stop: "+ newMessage.getContent());
+//            System.out.println("message content 3rd stop: "+ newMessage.getContent());
             // get the outputstream of client
-            System.out.println();
+//            System.out.println();
             OutputStream outputStream = clientSocket.getOutputStream();
             
             // Create a ObjectOutpuitStream so we can send objects to clients
@@ -253,7 +253,7 @@ class ClientHandler implements Runnable {
             // get the input stream from the connected socket
             // create a ObjectInputStream so we can read data from it.
 
-            System.out.println(newMessage.getType()+ "-----"+newMessage.getContent()+"-----" + newMessage.getMessageThreadID());
+//            System.out.println(newMessage.getType()+ "-----"+newMessage.getContent()+"-----" + newMessage.getMessageThreadID());
             objectOutputStream.writeObject(newMessage);
         } catch (IOException e) {
             System.out.println("Error: " + e.getMessage());
@@ -287,8 +287,8 @@ class ClientHandler implements Runnable {
 
                 if(!msgQueue.isEmpty()) {
                     Message msg = msgQueue.poll(); 
-                    System.out.println("message content 0st stop: " + msg.getContent());
-                    System.out.println("message type 0st stop: " + msg.getContent());
+//                    System.out.println("message content 0st stop: " + msg.getContent());
+//                    System.out.println("message type 0st stop: " + msg.getContent());
                     
 //                    if the message type is login log the user in
                     if(!loggedIn) {
@@ -328,8 +328,8 @@ class ClientHandler implements Runnable {
                             
                             break;
                         case NEW_TEXT: // if text message it returns a new message with the data capitalized.
-                            System.out.println("message content 1st stop: " + msg.getContent());
-                            System.out.println("message type 1st stop: " + msg.getContent());
+//                            System.out.println("message content 1st stop: " + msg.getContent());
+//                            System.out.println("message type 1st stop: " + msg.getContent());
                             Server.sendMessageThread(msg);
                             break;
 						default:
