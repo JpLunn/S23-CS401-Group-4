@@ -27,7 +27,11 @@ public class Message implements Serializable {
 		this.content = ("");
 		this.setCreatedDate(new Date());
 	}
-
+	
+	public Message(MessageType MsgType, String status) {
+		this.type = MsgType;
+		this.content = status;
+	}
 	public Message(User owner, String content, MessageType type) {
 		this.owner = owner;
 		this.content = content;

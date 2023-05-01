@@ -89,7 +89,7 @@ public class GUI implements ClientInterface{
 	    JPanel control = new JPanel(new GridLayout(0, 1, 2, 2));
 	    JTextField username = new JTextField();
 	    control.add(username);
-	    JPasswordField password = new JPasswordField();
+	    JTextField password = new JTextField();
 	    control.add(password);
 	    panel.add(control, BorderLayout.CENTER);
 
@@ -99,9 +99,7 @@ public class GUI implements ClientInterface{
 	    }
 	    User tempUser = new User();
 	    tempUser.setUsername(username.getText());
-	    String tString;
-	    tString = password.getPassword().toString();
-	    tempUser.setPassword(tString);
+	    tempUser.setPassword(password.getText());
 	    Message loginMessage = new Message(tempUser, "Login", MessageType.LOGIN);
 	    return loginMessage;
 	    

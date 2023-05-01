@@ -185,8 +185,11 @@ public class Server {
     public static Message checkLogin(Message msg) {
         
         for(User user: usersList) {
-            if(user == msg.getOwner())
-                return new Message(user, MessageType.VALID_LOGIN);
+            if(user.getUsername().contentEquals(msg.getOwner().getUsername())) {
+            	if(user.getPassword().contentEquals(msg.getOwner().getPassword())) {
+            		return new Message(user, MessageType.VALID_LOGIN);
+            	}
+            } 
         }
         return new Message(MessageType.INVALID_LOGIN);
     }
@@ -210,7 +213,7 @@ class ClientHandler implements Runnable {
     public ClientHandler(Socket clientSocket) {
         this.clientSocket = clientSocket;
         msgQueue = new LinkedList<Message>();
-        user.setSocket(clientSocket);
+        //user.setSocket(clientSocket);
     }
     
     public void run() {
@@ -263,7 +266,7 @@ class ClientHandler implements Runnable {
                         switch (msg.getType()) {
                         
                         case LOGOUT: // if logout message it logs the user out and returns a success logout message and closes the connection
-                            objectOutputStream.writeObject(new Message(MessageType.LOGOUT,"Success",""));
+                            objectOutputStream.writeObject(new Message(MessageType.LOGOUT,"Success"));
                             
                             // Show that client has logged out
                             System.out.println("Client successfully logged out");
@@ -277,8 +280,8 @@ class ClientHandler implements Runnable {
                             
                             break;
                         case NEW_TEXT: // if text message it returns a new message with the data capitalized.
-                            objectOutputStream.writeObject(new Message(MessageType.NEW_TEXT,"Success",msg.getContent().toUpperCase()));
-                            MessageThread newThread = checkMessageThread(msg);
+                            objectOutputStream.writeObject(new Message(MessageType.NEW_TEXT, msg.getContent().toUpperCase()));
+                            MessageThread newThread = Server.checkMessageThread(msg);
                             
                             objectOutputStream.writeObject(newThread);
                             break;
